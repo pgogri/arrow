@@ -17,7 +17,7 @@ from math import trunc
 from dateutil import tz as dateutil_tz
 from dateutil.relativedelta import relativedelta
 
-from arrow import formatter, locales, parser, util
+from arrow import constants, formatter, locales, parser, util
 
 if sys.version_info[:2] < (3, 6):  # pragma: no cover
     with warnings.catch_warnings():
@@ -977,39 +977,39 @@ class Arrow(object):
 
         try:
             if granularity == "auto":
-                if diff < 10:
+                if diff < constants.BOUND_NOW:
                     return locale.describe("now", only_distance=only_distance)
 
-                if diff < 45:
+                if diff < constants.BOUND_SEC:
                     seconds = sign * delta
                     return locale.describe(
                         "seconds", seconds, only_distance=only_distance
                     )
 
-                elif diff < 90:
+                elif diff < constants.BOUND_MIN_SINGULAR:
                     return locale.describe("minute", sign, only_distance=only_distance)
-                elif diff < 2700:
+                elif diff < constants.BOUND_MIN_PLURAL:
+                    # TODO: replace these magic numbers with constants
                     minutes = sign * int(max(delta / 60, 2))
                     return locale.describe(
                         "minutes", minutes, only_distance=only_distance
                     )
 
-                elif diff < 5400:
+                elif diff < constants.BOUND_HOUR_SINGULAR:
                     return locale.describe("hour", sign, only_distance=only_distance)
-                elif diff < 79200:
+                elif diff < constants.BOUND_HOUR_PLURAL:
                     hours = sign * int(max(delta / 3600, 2))
                     return locale.describe("hours", hours, only_distance=only_distance)
 
-                # anything less than 48 hours should be 1 day
-                elif diff < 172800:
+                elif diff < constants.BOUND_DAY_SINGULAR:
                     return locale.describe("day", sign, only_distance=only_distance)
-                elif diff < 554400:
+                elif diff < constants.BOUND_DAY_PLURAL:
                     days = sign * int(max(delta / 86400, 2))
                     return locale.describe("days", days, only_distance=only_distance)
 
-                elif diff < 907200:
+                elif diff < constants.BOUND_WEEK_SINGULAR:
                     return locale.describe("week", sign, only_distance=only_distance)
-                elif diff < 2419200:
+                elif diff < constants.BOUND_WEEK_PLURAL:
                     weeks = sign * int(max(delta / 604800, 2))
                     return locale.describe("weeks", weeks, only_distance=only_distance)
 
@@ -1018,9 +1018,7 @@ class Arrow(object):
                 elif diff < 29808000:
                     self_months = self._datetime.year * 12 + self._datetime.month
                     other_months = dt.year * 12 + dt.month
-
                     months = sign * int(max(abs(other_months - self_months), 2))
-
                     return locale.describe(
                         "months", months, only_distance=only_distance
                     )
