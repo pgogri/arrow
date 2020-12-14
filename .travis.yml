@@ -7,4 +7,3 @@ install:
   - pre-commit install
 script:
   - pytest
-  - pytest tests/test_arrow.py::TestTestArrowFactory::test_fromordinal
