@@ -8,5 +8,3 @@ install:
 script:
   - pytest
   - pytest tests/test_arrow.py::TestTestArrowFactory::test_fromordinal
-  - pytest tests/test_util.py::TestUtil::test_validate_ordinal
-  - pytest tests/test_arrow.py::TestArrowDatetimeInterface::test_isoformat_timespec
