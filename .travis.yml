@@ -7,4 +7,3 @@ install:
   - pre-commit install
 script:
   - pytest
-  - pre-commit run --all-files --show-diff-on-failure
